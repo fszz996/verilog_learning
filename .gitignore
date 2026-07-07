@@ -1,0 +1,11 @@
+# Icarus Verilog 编译生成的可执行文件
+sim
+
+# 波形文件
+*.vcd
+
+# Icarus Verilog 默认生成的仿真文件（如果有）
+*.vvp
+
+# 临时日志（可选）
+*.log
