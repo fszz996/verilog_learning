@@ -1,7 +1,7 @@
 module main(
     input [2:0] i,
     output [1:0] y
-)
+);
     wire [7:0] d;
     translater uut(
         .y(d),
