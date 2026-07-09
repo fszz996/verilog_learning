@@ -16,13 +16,14 @@ module lock_time(
         end
         else if(start==1)
         begin
-            if(count < 500000000)
+            if(count < 10)
             begin
                 count <= count + 1;
                 finish <= 0;
             end
             else
             begin
+                count <= 0;
                 finish <= 1;
             end
         end

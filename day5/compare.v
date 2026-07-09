@@ -5,10 +5,15 @@ module locker_compare(
     input [3:0] password,
     input clk,
     output reg [1:0] error_count,
-    input rst
+    input rst,
+    input clear_error
 );
     always @(posedge clk) begin
       if(rst == 1)begin
+        error_count <= 0;
+        pass <= 0;
+      end
+       else if(clear_error==1)begin
         error_count <= 0;
         pass <= 0;
       end

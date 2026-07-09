@@ -65,9 +65,8 @@ module top_lock_tb();
         #10;
 
         confirm = 0;
-
-        #50;
-
+     
+      #500;
         $finish;
 
     end

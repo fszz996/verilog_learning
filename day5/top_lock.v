@@ -8,6 +8,9 @@ module top_lock(
     );
 
     wire [1:0] error_count;
+    wire clear_error;
+
+    assign clear_error = finish;
 
     locker_compare ucompare(
     .clk(clk),
@@ -16,7 +19,8 @@ module top_lock(
     .password(password),
     .confirm(confirm),
     .pass(pass),
-    .error_count(error_count)
+    .error_count(error_count),
+    .clear_error(clear_error)
     );
 
     locker_locked ulocked(
