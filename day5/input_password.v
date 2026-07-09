@@ -28,14 +28,17 @@ module input_password(
         else
         begin
             ready <= 0;
+
             if(key_pass && count < 4)
             begin
-                password <= {password[11:0], key};
+                password <= {password[11:0],key};
                 count <= count + 1;
             end
+
             if(enter && count == 4)
             begin
                 ready <= 1;
+                count <= 0;
             end
         end
     end
