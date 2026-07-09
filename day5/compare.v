@@ -1,8 +1,8 @@
 module locker_compare(
-    input [3:0] scanf,
+    input [15:0] scanf,
     output reg pass,
     input confirm,
-    input [3:0] password,
+    input [15:0] password,
     input clk,
     output reg [1:0] error_count,
     input rst,
@@ -25,7 +25,8 @@ module locker_compare(
         end    
         else begin
           pass<=0;
-          error_count<=error_count+1;
+          if(error_count < 3)
+            error_count <= error_count + 1;
         end 
       end
       else

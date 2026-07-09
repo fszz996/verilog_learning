@@ -1,36 +1,49 @@
 module top_lock(
     input clk,
     input rst,
-    input confirm,
-    input [3:0] scanf,
+    input [15:0] key,
+    input key_pass,
+    input enter,
     input set,
     output pass,locked,finish
     );
 
     wire [1:0] error_count;
     wire clear_error;
-    wire [3:0] password;
+    wire [15:0] password;
+    wire [15:0] input_pwd;
+    wire ready;
 
     assign clear_error = finish;
 
-    password_store ustore(
-        .clk(clk),
-        .rst(rst),
-        .set(set),
-        .scanf(scanf),
-        .password(password)
+    input_password uinput(
+    .clk(clk),
+    .rst(rst),
+    .key(key),
+    .key_pass(key_pass),
+    .enter(enter),
+    .password(input_pwd),
+    .ready(ready)
+    );
+
+   password_store ustore(
+    .clk(clk),
+    .rst(rst),
+    .set(set),
+    .scanf(input_pwd),
+    .password(password)
     );
 
     locker_compare ucompare(
     .clk(clk),
     .rst(rst),
-    .scanf(scanf),
+    .scanf(input_pwd),
     .password(password),
-    .confirm(confirm),
+    .confirm(ready),
     .pass(pass),
     .error_count(error_count),
-    .clear_error(clear_error)
-    );
+    .clear_error(finish)
+);
 
     locker_locked ulocked(
     .error_count(error_count),
