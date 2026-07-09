@@ -3,14 +3,23 @@ module top_lock(
     input rst,
     input confirm,
     input [3:0] scanf,
-    input [3:0] password,
+    input set,
     output pass,locked,finish
     );
 
     wire [1:0] error_count;
     wire clear_error;
+    wire [3:0] password;
 
     assign clear_error = finish;
+
+    password_store ustore(
+        .clk(clk),
+        .rst(rst),
+        .set(set),
+        .scanf(scanf),
+        .password(password)
+    );
 
     locker_compare ucompare(
     .clk(clk),
