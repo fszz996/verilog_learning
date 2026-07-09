@@ -16,7 +16,7 @@ module lock_time(
         end
         else if(start==1)
         begin
-            if(count < 500,000,000)
+            if(count < 500000000)
             begin
                 count <= count + 1;
                 finish <= 0;
