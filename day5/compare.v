@@ -6,31 +6,39 @@ module locker_compare(
     input clk,
     output reg [1:0] error_count,
     input rst,
-    input clear_error
+    input clear_error,
+    input locked
 );
-    always @(posedge clk) begin
-      if(rst == 1)begin
-        error_count <= 0;
-        pass <= 0;
+    always @(posedge clk)
+  begin
+
+      if(rst)
+      begin
+          error_count <= 0;
+          pass <= 0;
       end
-       else if(clear_error==1)begin
-        error_count <= 0;
-        pass <= 0;
-      end
-      else begin
-      if (confirm == 1) begin
-        if (scanf == password) begin
-            pass<=1;
-            error_count <= 0;
-        end    
-        else begin
-          pass<=0;
-          if(error_count < 3)
-            error_count <= error_count + 1;
-        end 
+
+      else if(clear_error)
+      begin
+          error_count <= 0;
+          pass <= 0;
       end
       else
-        pass <= 0;
+      begin
+          pass <= 0;
+          if(confirm && !locked)
+          begin
+              if(scanf == password)
+              begin
+                  pass <= 1;
+                  error_count <= 0;
+              end
+              else
+              begin
+                  if(error_count < 3)
+                      error_count <= error_count + 1;
+              end
+          end
       end
-    end
+  end
 endmodule

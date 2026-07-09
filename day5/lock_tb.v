@@ -14,6 +14,7 @@ module lock_tb();
     wire finish;
 
 
+
     top_lock uut(
         .clk(clk),
         .rst(rst),
@@ -29,7 +30,8 @@ module lock_tb();
     );
 
 
-    // 时钟
+
+    // 10ns周期时钟
     always #5 clk = ~clk;
 
 
@@ -38,6 +40,7 @@ module lock_tb();
     task input_num;
         input [3:0] num;
         begin
+
             key = num;
             key_pass = 1;
 
@@ -46,7 +49,25 @@ module lock_tb();
             key_pass = 0;
 
             #10;
+
         end
+    endtask
+
+
+
+    // 输入四位密码
+    task input_password;
+        input [15:0] pwd;
+
+        begin
+
+            input_num(pwd[15:12]);
+            input_num(pwd[11:8]);
+            input_num(pwd[7:4]);
+            input_num(pwd[3:0]);
+
+        end
+
     endtask
 
 
@@ -57,8 +78,6 @@ module lock_tb();
         $dumpvars(0,lock_tb);
 
 
-
-        // 初始化
 
         clk = 0;
 
@@ -71,7 +90,9 @@ module lock_tb();
 
 
 
-        //复位
+        //========================
+        // 复位
+        //========================
 
         #20;
 
@@ -79,47 +100,43 @@ module lock_tb();
 
 
 
-        //--------------------------------
-        // 设置密码 1234
-        //--------------------------------
+        //========================
+        // 设置密码1234
+        //========================
 
-        input_num(4'b0001);
-        input_num(4'b0010);
-        input_num(4'b0011);
-        input_num(4'b0100);
+        $display("set password 1234");
 
 
-        //确认设置
+        input_password(16'h1234);
+
 
         enter = 1;
         #10;
-
         enter = 0;
 
 
-        //保存密码
-
         set = 1;
         #10;
-
         set = 0;
 
 
 
-        //--------------------------------
-        // 正确密码测试1234
-        //--------------------------------
+        #50;
 
-        input_num(1);
-        input_num(2);
-        input_num(3);
-        input_num(4);
+
+
+        //========================
+        // 正确密码测试
+        //========================
+
+        $display("correct password");
+
+
+        input_password(16'h1234);
 
 
         enter = 1;
-
         #10;
-
         enter = 0;
 
 
@@ -127,30 +144,14 @@ module lock_tb();
 
 
 
-        //--------------------------------
-        // 错误密码1111 三次
-        //--------------------------------
+        //========================
+        // 错误密码第一次
+        //========================
+
+        $display("wrong password 1");
 
 
-        input_num(1);
-        input_num(1);
-        input_num(1);
-        input_num(1);
-
-
-        enter = 1;
-        #10;
-        enter = 0;
-
-
-        #20;
-
-
-
-        input_num(1);
-        input_num(1);
-        input_num(1);
-        input_num(1);
+        input_password(16'h1111);
 
 
         enter = 1;
@@ -158,14 +159,37 @@ module lock_tb();
         enter = 0;
 
 
-        #20;
+        #50;
 
 
 
-        input_num(1);
-        input_num(1);
-        input_num(1);
-        input_num(1);
+        //========================
+        // 错误密码第二次
+        //========================
+
+        $display("wrong password 2");
+
+
+        input_password(16'h1111);
+
+
+        enter = 1;
+        #10;
+        enter = 0;
+
+
+        #50;
+
+
+
+        //========================
+        // 错误密码第三次
+        //========================
+
+        $display("wrong password 3");
+
+
+        input_password(16'h1111);
 
 
         enter = 1;
@@ -175,8 +199,27 @@ module lock_tb();
 
 
         //等待锁定计时
+        #600;
 
-        #500;
+
+
+        //========================
+        // 解锁后再次测试
+        //========================
+
+
+        $display("test again");
+
+
+        input_password(16'h1234);
+
+
+        enter = 1;
+        #10;
+        enter = 0;
+
+
+        #100;
 
 
 

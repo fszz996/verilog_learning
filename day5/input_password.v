@@ -4,13 +4,21 @@ module input_password(
     input [3:0] key,
     input key_pass,
     input enter,
+    input clear,
     output reg [15:0] password,
     output reg ready
 );
-    reg [2:0] count;//count4位
+    reg [2:0] count;
     always @(posedge clk)
     begin
-        if(rst==1)
+        if(rst)
+        begin
+            password <= 16'b0;
+            count <= 0;
+            ready <= 0;
+        end
+
+        else if(clear)
         begin
             password <= 16'b0;
             count <= 0;
@@ -19,11 +27,11 @@ module input_password(
 
         else
         begin
+            ready <= 0;
             if(key_pass && count < 4)
             begin
                 password <= {password[11:0], key};
                 count <= count + 1;
-                ready <= 0;
             end
             if(enter && count == 4)
             begin

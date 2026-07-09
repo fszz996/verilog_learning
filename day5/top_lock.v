@@ -13,8 +13,11 @@ module top_lock(
     wire [15:0] password;
     wire [15:0] input_pwd;
     wire ready;
+    wire clear_input;
+    wire locked_signal;
 
     assign clear_error = finish;
+    assign clear_input = finish;
 
     input_password uinput(
     .clk(clk),
@@ -23,7 +26,8 @@ module top_lock(
     .key_pass(key_pass),
     .enter(enter),
     .password(input_pwd),
-    .ready(ready)
+    .ready(ready),
+    .clear(clear_input)
     );
 
    password_store ustore(
@@ -42,12 +46,13 @@ module top_lock(
     .confirm(ready),
     .pass(pass),
     .error_count(error_count),
-    .clear_error(finish)
+    .clear_error(finish),
+    .locked(locked_signal)
 );
 
     locker_locked ulocked(
     .error_count(error_count),
-    .locked(locked)
+    .locked(locked_signal)
     );
 
     lock_time utimer(
@@ -56,4 +61,7 @@ module top_lock(
     .start(locked),
     .finish(finish)
     );
+
+    assign locked = locked_signal;
+    
 endmodule
